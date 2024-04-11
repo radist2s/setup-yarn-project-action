@@ -1,0 +1,33 @@
+name: "Setup JS project using Yarn"
+description: "Setup Node.js and Install dependencies."
+inputs:
+  cache:
+    description: 'Enable TurboRepo Remote Cache, "node_modules/*" and ".yarn/cache/*", default: "true"'
+    required: false
+    default: 'true'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node.js 18.x
+      uses: actions/setup-node@v4
+      with:
+        cache: ${{ inputs.cache == 'true' && 'yarn' || '' }}
+        node-version: 18.x
+
+    - name: Restore node_modules
+      if: ${{ inputs.cache == 'true' }}
+      uses: actions/cache@v4
+      with:
+        path: |
+          .yarn/install-state.gz
+          **/node_modules
+        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}-1
+
+    - name: Install Dependencies
+      shell: bash
+      run: yarn install --immutable
+
+    - name: Run Turborepo Remote Cache
+      if: ${{ inputs.cache == 'true' }}
+      uses: dtinth/setup-github-actions-caching-for-turbo@v1.2.0
