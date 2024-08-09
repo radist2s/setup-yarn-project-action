@@ -56,7 +56,7 @@ jobs:
 
 ## Features
 
-- Sets up Node.js 18.x.
+- Sets up Node.js 20.x.
 - Installs dependencies using Yarn.
 - Caches `node_modules` and `.yarn/cache` to reduce build times.
 - Enables Turbo Repo Remote Cache for faster dependency builds.
